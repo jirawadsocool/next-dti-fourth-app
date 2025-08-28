@@ -1,4 +1,6 @@
+'use client'
 import React, { useState } from 'react';
+
 
 const CarInstallment = () => {
     // State variables are included for potential future functionality,
