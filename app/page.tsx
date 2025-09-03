@@ -28,7 +28,7 @@ export default function App() {
           {/* Logo SVG */}
           <div className="flex justify-center items-center mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 text-indigo-400" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 4a8 8 0 110 16 8 8 0 010-16zM11 6h2v2h-2V6zm0 3h2v2h-2V9zm-3 3h8v2H8v-2zm-1 3h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8-4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-4-4h-2V7h2v2z"/>
             </svg>
           </div>
           <h1 className="text-4xl font-bold text-gray-100 mb-2">เครื่องมือคำนวณออนไลน์</h1>

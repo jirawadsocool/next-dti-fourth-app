@@ -3,14 +3,53 @@ import React, { useState } from 'react';
 
 
 const CarInstallment = () => {
-    // State variables are included for potential future functionality,
-    // but they are not used for calculations in this UI-only version.
     const [carPrice, setCarPrice] = useState('');
     const [downPayment, setDownPayment] = useState('10');
     const [interestRate, setInterestRate] = useState('');
     const [loanTerm, setLoanTerm] = useState('12');
     const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [userName, setUserName] = useState('');
+
+    const calculateInstallment = () => {
+        const price = parseFloat(carPrice);
+        const dpPercent = parseFloat(downPayment);
+        const ratePercent = parseFloat(interestRate);
+        const termMonths = parseInt(loanTerm, 10);
+
+        if (isNaN(price) || isNaN(ratePercent) || price <= 0 || ratePercent < 0) {
+            alert('กรุณากรอกราคารถยนต์และอัตราดอกเบี้ยให้ถูกต้อง');
+            return;
+        }
+
+        // 1. คำนวณเงินดาวน์
+        const downPaymentAmount = price * (dpPercent / 100);
+
+        // 2. คำนวณยอดจัด (ยอดเงินกู้)
+        const loanAmount = price - downPaymentAmount;
+
+        // 3. คำนวณดอกเบี้ยต่อปี
+        const interestPerYear = loanAmount * (ratePercent / 100);
+
+        // 4. คำนวณดอกเบี้ยทั้งหมดที่ต้องจ่ายตลอดอายุสัญญา
+        const totalInterest = (termMonths / 12) * interestPerYear;
+
+        // 5. คำนวณยอดเงินที่ต้องผ่อนทั้งหมด (ยอดจัด + ดอกเบี้ยทั้งหมด)
+        const totalPayment = loanAmount + totalInterest;
+
+        // 6. คำนวณค่างวดต่อเดือน
+        const monthly = totalPayment / termMonths;
+
+        setMonthlyPayment(monthly);
+    };
+
+    const resetFields = () => {
+        setCarPrice('');
+        setDownPayment('10');
+        setInterestRate('');
+        setLoanTerm('12');
+        setMonthlyPayment(0);
+        setUserName('');
+    };
 
     return (
         <div className="bg-slate-950 min-h-screen flex items-center justify-center p-4 font-inter text-slate-100">
@@ -38,10 +77,9 @@ const CarInstallment = () => {
                         strokeLinejoin="round"
                         className="text-blue-500"
                     >
-                        <path d="M10 17L5 12L10 7"/>
-                        <path d="M14 7L19 12L14 17"/>
-                        <path d="M16 4h-4"/>
-                        <path d="M8 4H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-4"/>
+                        <path d="M14 16H9m10 0h1c.6 0 1-.4 1-1V8c0-1.1-.9-2-2-2h-1.3L15 4H9L6.3 6H5c-1.1 0-2 .9-2 2v8c0 .6.4 1 1 1h1"/>
+                        <circle cx="6.5" cy="16.5" r="2.5"/>
+                        <circle cx="17.5" cy="16.5" r="2.5"/>
                     </svg>
                 </div>
 
@@ -122,14 +160,14 @@ const CarInstallment = () => {
                 {/* Buttons */}
                 <div className="w-full flex space-x-4">
                     <button
+                        onClick={calculateInstallment}
                         className="flex-1 bg-blue-600 text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
-                        // The button is for UI only, no onClick handler is provided
                     >
                         คำนวณค่างวด
                     </button>
                     <button
+                        onClick={resetFields}
                         className="flex-1 bg-red-500 text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-red-600 transition-colors"
-                        // The button is for UI only, no onClick handler is provided
                     >
                         รีเซ็ต
                     </button>

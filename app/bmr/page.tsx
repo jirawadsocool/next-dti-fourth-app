@@ -1,8 +1,48 @@
-import React from 'react';
+'use client'
+import React, { useState } from 'react';
 
-// This is the main component for the BMR calculator.
-// It is styled with a dark theme using Tailwind CSS.
-export default function App() {
+export default function BMRPage() {
+  const [gender, setGender] = useState<'male' | 'female'>('male');
+  const [weight, setWeight] = useState<string>('');
+  const [height, setHeight] = useState<string>('');
+  const [age, setAge] = useState<string>('');
+  const [bmr, setBmr] = useState<string | null>(null);
+
+  const calculateBMR = () => {
+    if (!weight || !height || !age) {
+      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      return;
+    }
+
+    const w = parseFloat(weight);
+    const h = parseFloat(height);
+    const a = parseFloat(age);
+
+    if (isNaN(w) || isNaN(h) || isNaN(a) || w <= 0 || h <= 0 || a <= 0) {
+      alert('กรุณากรอกข้อมูลให้ถูกต้อง');
+      return;
+    }
+
+    let bmrValue: number;
+    if (gender === 'male') {
+      // Harris-Benedict Equation for men
+      bmrValue = 88.362 + (13.397 * w) + (4.799 * h) - (5.677 * a);
+    } else {
+      // Harris-Benedict Equation for women
+      bmrValue = 447.593 + (9.247 * w) + (3.098 * h) - (4.330 * a);
+    }
+
+    setBmr(bmrValue.toFixed(2));
+  };
+
+  const resetFields = () => {
+    setGender('male');
+    setWeight('');
+    setHeight('');
+    setAge('');
+    setBmr(null);
+  };
+
   return (
     // Main container with a dark background.
     <div className="bg-slate-950 min-h-screen flex items-center justify-center p-4">
@@ -16,15 +56,15 @@ export default function App() {
           <p className="text-xl text-gray-400 font-semibold mt-2">คำนวณอัตราการเผาผลาญพลังงาน (BMR)</p>
         </div>
 
-        {/* BMR Icon/Placeholder - Replaced the image with a simple div to fit the theme */}
+        {/* BMR Icon/Placeholder */}
         <div className="w-48 h-48 bg-gray-800 rounded-full shadow-md flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-24 w-24 text-gray-400"
+            className="h-24 w-24 text-blue-400"
             viewBox="0 0 24 24"
             fill="currentColor"
           >
-            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zM12 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-4 7h8a1 1 0 0 0 0-2H8a1 1 0 0 0 0 2zM8.5 16h7a1 1 0 0 0 0-2h-7a1 1 0 0 0 0 2z" />
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
           </svg>
         </div>
 
@@ -32,13 +72,15 @@ export default function App() {
         <div className="w-full space-y-4">
           {/* Gender Selection */}
           <div>
-            <label htmlFor="gender" className="text-lg text-gray-300 font-medium">เพศ</label>
+            <label className="text-lg text-gray-300 font-medium">เพศ</label>
             <div className="flex space-x-4 mt-2">
               <label className="flex items-center">
                 <input
                   type="radio"
                   name="gender"
                   value="male"
+                  checked={gender === 'male'}
+                  onChange={() => setGender('male')}
                   className="mr-2 h-4 w-4 text-blue-400 focus:ring-blue-400"
                 />
                 <span className="text-gray-300">ชาย</span>
@@ -48,7 +90,9 @@ export default function App() {
                   type="radio"
                   name="gender"
                   value="female"
-                  className="mr-2 h-4 w-4 text-blue-400 focus:ring-blue-400"
+                  checked={gender === 'female'}
+                  onChange={() => setGender('female')}
+                  className="mr-2 h-4 w-4 text-pink-400 focus:ring-pink-400"
                 />
                 <span className="text-gray-300">หญิง</span>
               </label>
@@ -59,7 +103,9 @@ export default function App() {
             <input
               type="number"
               id="weight"
-              placeholder="ป้อนน้ำหนัก "
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              placeholder="ป้อนน้ำหนัก"
               className="mt-2 w-full p-3 bg-slate-800 text-gray-200 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             />
           </div>
@@ -68,6 +114,8 @@ export default function App() {
             <input
               type="number"
               id="height"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
               placeholder="ป้อนส่วนสูง"
               className="mt-2 w-full p-3 bg-slate-800 text-gray-200 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             />
@@ -77,6 +125,8 @@ export default function App() {
             <input
               type="number"
               id="age"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
               placeholder="ป้อนอายุ"
               className="mt-2 w-full p-3 bg-slate-800 text-gray-200 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             />
@@ -85,17 +135,25 @@ export default function App() {
 
         {/* Buttons */}
         <div className="w-full flex space-x-4">
-          <button className="flex-1 bg-blue-800 text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-colors">
+          <button
+            onClick={calculateBMR}
+            className="flex-1 bg-blue-800 text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
+          >
             คำนวณ BMR
           </button>
-          <button className="flex-1 bg-red-800 text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-colors">
+          <button
+            onClick={resetFields}
+            className="flex-1 bg-red-800 text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-colors"
+          >
             รีเซ็ต
           </button>
         </div>
 
         {/* Result Display */}
         <div className="w-full text-center mt-4">
-          <h2 className="text-2xl font-bold text-gray-200">ค่า BMR ที่คำนวณได้: <span id="bmrResult" className="text-blue-400">0.00</span></h2>
+          <h2 className="text-2xl font-bold text-gray-200">
+            ค่า BMR ที่คำนวณได้: <span className="text-blue-400">{bmr !== null ? bmr : '0.00'}</span>
+          </h2>
         </div>
       </div>
     </div>
